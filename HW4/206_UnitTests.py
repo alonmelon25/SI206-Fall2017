@@ -168,8 +168,14 @@ class tests(unittest.TestCase):
 		self.assertEqual(type(war), tuple)
 		self.assertEqual(type(war[0]), str)
 
+	# Additional 2 tests
+	def test_spades(self):
+		spades = Card(suit = 3)
+		self.assertEqual(spades.suit, "Spades")
 
-
+	def test_faces_present(self):
+		face_present = Card()
+		self.assertEqual(face_present.faces, {11: "Jack", 12: "Queen", 13: "King", 1: "Ace"})
 
 
 
