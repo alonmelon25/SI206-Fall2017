@@ -97,8 +97,7 @@ def get_tweet_data(search_text):
 
 ## 3. Using a loop, invoke your function, save the return value in a variable, and explore the
 ##		data you got back!
-i = 0
-while i < 1:
+for i in range(3):
     search = input('Enter search text: ')
     if len(search) < 1: break  #Break if search text is less than 1 character
     data = get_tweet_data(search)
@@ -112,4 +111,4 @@ while i < 1:
     for tweet in data_dict['statuses'][:5]:  #Print content from 5 tweets
         print('TEXT: ' + tweet['text'])  #Print out text
         print('CREATED AT: '+ tweet['created_at'])  #Print out time created
-        print('\n')
+        print('\n')  #New line for each status
