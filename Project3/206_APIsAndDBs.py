@@ -18,7 +18,7 @@ import twitter_info # same deal as always...
 import json
 import sqlite3
 
-## Your name:
+## Your name: Aaron Cheng
 ## The names of anyone you worked with on this project:
 
 #####
@@ -90,7 +90,7 @@ conn = sqlite3.connect('206_APIsAndDBs.sqlite')
 cur = conn.cursor()
 
 cur.execute('DROP TABLE IF EXISTS Users')
-cur.execute('CREATE TABLE Users (user_id TEXT PRIMARY KEY, screen_name TEXT, num_favs INTEGER, description TEXT)')
+cur.execute('CREATE TABLE Users (user_id TEXT, screen_name VARCHAR, num_favs INTEGER, description TEXT, PRIMARY KEY(user_id))')
 for tweets in umich_tweets:
 	tup = (tweets["user"]["id"], tweets["user"]["screen_name"], tweets["user"]["favourites_count"], tweets["user"]["description"])
 	cur.execute('INSERT OR IGNORE INTO Users (user_id, screen_name, num_favs, description) VALUES (?, ?, ?, ?)', tup)
@@ -105,10 +105,10 @@ for tweets in umich_tweets:
 # NOTE: Be careful that you have the correct user ID reference in
 # the user_id column! See below hints.
 cur.execute('DROP TABLE IF EXISTS Tweets')
-cur.execute('CREATE TABLE Tweets (tweet_id TEXT PRIMARY KEY, text TEXT, user_posted TEXT, time_posted TIMESTAMP, retweets INTEGER, FOREIGN KEY(user_posted) REFERENCES Users(user_id))')
+cur.execute('CREATE TABLE Tweets (tweet_id TEXT, text TEXT, user_posted TEXT, time_posted TIMESTAMP, retweets INTEGER, PRIMARY KEY (tweet_id), FOREIGN KEY(user_posted) REFERENCES Users(user_id))')
 for tweets in umich_tweets:
     tup = tweets["id_str"], tweets["text"], tweets["user"]["id_str"], tweets["created_at"], tweets["retweet_count"]
-    cur.execute('INSERT OR IGNORE INTO Tweets (tweet_id, text, time_posted, time_posted, retweets) VALUES (?, ?, ?, ?, ?)', tup)
+    cur.execute('INSERT OR IGNORE INTO Tweets (tweet_id, text, user_posted, time_posted, retweets) VALUES (?, ?, ?, ?, ?)', tup)
 
 conn.commit()
 
@@ -143,8 +143,9 @@ screen_names = cur.fetchall()
 
 lst = []
 for i in screen_names:
-	lst.append(i[0])
+	lst.append(i[0][0])
 
+screen_names = lst
 
 # Make a query to select all of the tweets (full rows of tweet information)
 # that have been retweeted more than 10 times. Save the result
@@ -161,18 +162,20 @@ retweets = cur.fetchall()
 favorites = True
 cur.execute("SELECT description FROM Users WHERE num_favs > 500")
 favorites = cur.fetchall()
-
+print(favorites)
 lst = []
 for i in favorites:
-	lst.append(i[0])
+	lst.append(i[0][0])
 
-
+favorites = lst
 # Make a query using an INNER JOIN to get a list of tuples with 2
 # elements in each tuple: the user screenname and the text of the
 # tweet. Save the resulting list of tuples in a variable called joined_data2.
 joined_data = True
-cur.execute("SELECT Users.screen_name, Tweets.text FROM Users JOIN Tweets ON Users.user_id = Tweets.user_posted")
+cur.execute("SELECT Users.screen_name, Tweets.text FROM Users INNER JOIN Tweets WHERE Users.user_id = Tweets.user_posted")
 joined_data = cur.fetchall()
+print(joined_data)
+
 
 # Make a query using an INNER JOIN to get a list of tuples with 2
 # elements in each tuple: the user screenname and the text of the
