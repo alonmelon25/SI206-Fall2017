@@ -30,7 +30,7 @@ except:
 
 # Function to get data
 def get_facebook_data(user):
-    unique_identifier = {"access_token": facebook_access_token, "limit": 100, 'fields': "id,status_type,message,created_time"}
+    unique_identifier = {"access_token": facebook_access_token, "limit": 100, 'fields': "id, status_type, message, created_time"}
     url = "https://graph.facebook.com/v2.3/me/feed"
 
     if user in CACHE_DICTION:
@@ -44,18 +44,14 @@ def get_facebook_data(user):
         dumped_json_cache = json.dumps(CACHE_DICTION)
         f = open(CACHE_FNAME, 'w')
         f.write(dumped_json_cache)
-        f.close()  #Close the open file
+        f.close() #Close the open file
     return facebook_results
 
 
 # Invocation
 facebook_json = get_facebook_data("Aaron Cheng")
-# facebook_json = json.loads(facebook_cache)
 
 info = []
-print (len(facebook_json))
-print (type(facebook_json))
-
 data = facebook_json['data']
 
 # Connect database and load data into database
@@ -91,12 +87,7 @@ fri = []
 sat = []
 
 for i in info:
-    # yr = i[0:4]
-    # mo = i[5:7]
-    # day = i[8:10]
-    # day_of_week = dt.date((yr), (mo), (day)).weekday()
     day_of_week = dt.date(i).weekday()
-
 
 # Separating days of week
     if day_of_week == 0:

@@ -18,22 +18,7 @@ try:
 except:
     CACHE_DICTION = {}
 
-# Gather weather data from Darksky API
-# def get_weather_data():
-#
-#     lat = str(lat)
-#     lng = str(lng)
-#
-#     base_url = 'https://api.darksky.net/forecast/'
-#     full_url = base_url + weather_access_token + '/' + lat + ',' + lng
-#
-#     response = requests.get(full_url)
-#     data = json.loads(response.text)
-#
-#     return data
-#
-# #Invocation
-# darksky_cache = get_weather_data()
+# Function to get data
 def get_weather_data(latitude, longitude):
     base_url = 'https://api.darksky.net/forecast/'
     api_key = 'fc81cbec4d2940e71ab13cf15e4d50ef'
@@ -50,11 +35,11 @@ def get_weather_data(latitude, longitude):
 # The latitude and longitude currently used is Ann Arbor's
 # To display weather from other countries, change the latitude and the longitude
 darksky_cache = get_weather_data('42.280841', '-83.738115')
+info = []
 
 # Connect database and load data into database
 conn = sqlite3.connect('darksky.sqlite')
 cur = conn.cursor()
-info = []
 
 cur.execute('DROP TABLE IF EXISTS Weather')
 cur.execute('CREATE TABLE Weather (summary VARCHAR, temperatureHigh NUMBER, temperatureLow NUMBER)')
@@ -100,9 +85,9 @@ plotly.tools.set_credentials_file(username = 'alonmelon25', api_key = 'PmSfJAhSM
 plotly.tools.set_config_file(world_readable = True)
 
 # Plot data for Darksky
-weather_high = plotly.graph_objs.Bar(x=['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+weather_high = plotly.graph_objs.Scatter(x=['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
 y = high_temp, name = "High Temp")
-weather_low = plotly.graph_objs.Bar(x=['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+weather_low = plotly.graph_objs.Scatter(x=['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
 y = low_temp, name = "Low Temp")
 
 data = [weather_high, weather_low]
